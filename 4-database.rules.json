@@ -1,0 +1,41 @@
+{
+  "rules": {
+    "rooms": {
+      "$room": {
+        ".read": "auth != null",
+        "hostId": {
+          ".write": "auth != null && !data.exists() && newData.val() === auth.uid"
+        },
+        "phase": {
+          ".write": "auth != null && root.child('rooms/'+$room+'/hostId').val() === auth.uid"
+        },
+        "createdAt": {
+          ".write": "auth != null && root.child('rooms/'+$room+'/hostId').val() === auth.uid"
+        },
+        "settings": {
+          ".write": "auth != null && root.child('rooms/'+$room+'/hostId').val() === auth.uid"
+        },
+        "players": {
+          "$uid": {
+            ".write": "auth != null && (auth.uid === $uid || root.child('rooms/'+$room+'/hostId').val() === auth.uid)"
+          }
+        },
+        ".write": "auth != null && !data.exists() && newData.child('hostId').val() === auth.uid"
+      }
+    },
+    "submissions": {
+      "$room": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('rooms/'+$room+'/hostId').val() === auth.uid)",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "reveals": {
+      "$room": {
+        ".read": "auth != null && now < data.child('endsAt').val()",
+        ".write": "auth != null && root.child('rooms/'+$room+'/hostId').val() === auth.uid"
+      }
+    }
+  }
+}
