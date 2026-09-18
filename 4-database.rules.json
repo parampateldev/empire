@@ -4,7 +4,7 @@
       "$room": {
         ".read": "auth != null",
         "hostId": {
-          ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && newData.exists() && newData.val() !== auth.uid && root.child('rooms/'+$room+'/players/'+newData.val()).exists()))"
+          ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && newData.exists() && newData.val() !== auth.uid && newData.parent().child('players/'+newData.val()).exists()))"
         },
         "phase": {
           ".write": "auth != null && root.child('rooms/'+$room+'/hostId').val() === auth.uid"
