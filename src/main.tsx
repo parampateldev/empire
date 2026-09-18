@@ -217,7 +217,7 @@ function Board({room,host,capture,code,submissions,onRevealAgain,timerOff,onTogg
     <h2>{win?`${win.name} rules the empire.`:'Who remembers who?'}</h2>
     <p className="muted">Guess aloud. The host records a correct capture; the losing empire moves as one.</p>
     {host&&<details className="identity-key"><summary>Host identity key</summary>{Object.entries(submissions).map(([id,s])=><div key={id}><span>{s.word}</span><b>{players[id]?.name||'Player left'}</b></div>)}</details>}
-    <div className="empires">{alive.map(p=><article key={p.id}><i>{p.name[0]}</i><h3>{p.name}</h3><p>{(p.members||[]).length+1} in empire</p><div>{(p.members||[]).map(id=><span key={id}>{players[id]?.name}</span>)}</div></article>)}</div>
+    <EmpireMap players={players}/>
     {host&&!win&&alive.length>=2&&<div className="capture">
       <select value={a} onChange={e=>setA(e.target.value)}>{alive.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select>
       <span>captured</span>
@@ -226,6 +226,21 @@ function Board({room,host,capture,code,submissions,onRevealAgain,timerOff,onTogg
     </div>}
     {host&&!win&&<button className="ghost reveal-again" onClick={onRevealAgain}>Reveal the list again</button>}
     {host&&<button className="board-timer" onClick={onToggleTimer}>Reveal timer: {timerOff?'off':'on'}</button>}
+  </section>;
+}
+
+function EmpireMap({players}:{players:Record<string,Player>}){
+  const leaders=Object.values(players).filter(p=>p&&p.id&&p.name&&!p.eliminated);
+  return <section className="empire-map" aria-label="Live empire map">
+    <div className="map-heading"><div><p className="map-kicker">Live board</p><h3>Empire map</h3></div><span><i/> Updates for everyone</span></div>
+    <p className="map-help">Each leader starts alone. Captured players branch beneath the empire they joined.</p>
+    <div className="empire-grove">{leaders.map((leader,index)=>{
+      const members=(leader.members||[]).map(id=>players[id]).filter(Boolean);
+      return <article className="empire-tree" key={leader.id} style={{'--tree-accent':`var(--tree-${index%5})`} as React.CSSProperties}>
+        <div className="leader-node"><i>{leader.name[0]}</i><div><strong>{leader.name}</strong><small>{members.length?`Leads ${members.length+1}`:'Independent'}</small></div></div>
+        {members.length>0&&<div className="tree-branches">{members.map((member,memberIndex)=><div className="member-branch" key={member.id}><span className="branch-line"/><div className="member-node"><i>{member.name[0]}</i><span>{member.name}</span><small>{memberIndex===0?'Captured':'In empire'}</small></div></div>)}</div>}
+      </article>
+    })}</div>
   </section>;
 }
 
