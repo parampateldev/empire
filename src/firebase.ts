@@ -73,8 +73,18 @@ export async function saveTimerOff(code:string,hostId:string,off:boolean){
   await set(ref(db!,`rooms/${code}/settings/timerOff`),off);
 }
 export async function leaveRoom(code:string,uid:string){
-  await remove(ref(db!,`rooms/${code}/players/${uid}`));
-  await remove(ref(db!,`submissions/${code}/${uid}`));
+  const room=(await get(roomRef(code))).val() as Room|null;
+  if(!room?.players?.[uid])return;
+  if(room.hostId!==uid){
+    await update(ref(db!),{[`rooms/${code}/players/${uid}`]:null,[`submissions/${code}/${uid}`]:null});
+    return;
+  }
+  const nextHost=Object.keys(room.players).filter(id=>id!==uid).sort()[0];
+  if(!nextHost){
+    await update(ref(db!),{[`rooms/${code}`]:null,[`submissions/${code}`]:null,[`reveals/${code}`]:null});
+    return;
+  }
+  await update(ref(db!),{[`rooms/${code}/hostId`]:nextHost,[`rooms/${code}/players/${uid}`]:null,[`submissions/${code}/${uid}`]:null});
 }
 export async function removePlayer(code:string,hostId:string,targetUid:string){
   const snap=await get(roomRef(code));
