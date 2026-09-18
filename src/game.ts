@@ -6,7 +6,7 @@ export function capture(players:Record<string,Player>,attackerId:string,targetId
   const next=structuredClone(players);
   const attacker=next[attackerId],target=next[targetId];
   if(!attacker||!target||attacker.eliminated||target.eliminated)throw new Error('Invalid capture');
-  const claimed=[targetId,...target.members];
+  const claimed=[targetId,...(target.members||[])];
   attacker.members=[...new Set([...(attacker.members||[]),...claimed])];
   target.eliminated=true;target.leaderId=attackerId;
   for(const id of (target.members||[])){if(next[id]){next[id].leaderId=attackerId;next[id].eliminated=true}}
