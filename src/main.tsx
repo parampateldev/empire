@@ -157,13 +157,13 @@ function App(){
   const share=`${location.origin}/empire/${code}`;
   const pageProps={help:()=>setHelpOpen(true),helpOpen,closeHelp:()=>setHelpOpen(false)};
 
-  if(screen==='home')return <Page {...pageProps}><section className="hero"><div className="crown">â</div><p className="eyebrow">The social memory game</p><h1>Build your<br/><em>Empire.</em></h1><p className="lead">Choose a secret identity. Remember the list. Guess your friends. Rule the room.</p><div className="actions"><button onClick={()=>setScreen('setup')}>Host a game</button><button className="ghost" onClick={()=>setScreen('join')}>Join with code</button></div>{demo&&<p className="demo">Preview mode Â· realtime setup in progress</p>}</section></Page>;
+  if(screen==='home')return <Page {...pageProps}><section className="hero"><div className="crown">♜</div><p className="eyebrow">The social memory game</p><h1>Build your<br/><em>Empire.</em></h1><p className="lead">Choose a secret identity. Remember the list. Guess your friends. Rule the room.</p><div className="actions"><button onClick={()=>setScreen('setup')}>Host a game</button><button className="ghost" onClick={()=>setScreen('join')}>Join with code</button></div>{demo&&<p className="demo">Preview mode · realtime setup in progress</p>}</section></Page>;
 
   if(screen==='setup')return <Page {...pageProps}><Card title="Host a game" back={()=>setScreen('home')}><Field label="Your name" value={name} set={setName} placeholder="Param"/><Field label="Secret category" value={category} set={setCategory} placeholder="Cities"/><label className="timer-row">Reveal timer<button type="button" className={timerOn?'toggle on':'toggle'} aria-pressed={timerOn} onClick={()=>setTimerOn(v=>!v)}>{timerOn?'On':'Off'}</button></label>{timerOn&&<label>Reveal time <b>{duration} seconds</b><input type="range" min="15" max="60" step="5" value={duration} onChange={e=>setDuration(+e.target.value)}/></label>}<button disabled={!uid} onClick={host}>Create room</button><ErrorText text={error}/></Card></Page>;
 
   if(screen==='join')return <Page {...pageProps}><Card title="Join a room" back={()=>setScreen('home')}><Field label="Room code" value={code} set={v=>setCode(v.toUpperCase())} placeholder="ABC234"/><Field label="Your name" value={name} set={setName} placeholder="Your name"/><button disabled={!uid} onClick={join}>Join game</button><ErrorText text={error}/></Card></Page>;
 
-  if(!room)return <Page {...pageProps}><div className="loader">Joining {code}â¦</div><ErrorText text={error}/></Page>;
+  if(!room)return <Page {...pageProps}><div className="loader">Joining {code}…</div><ErrorText text={error}/></Page>;
 
   if(room.phase==='reveal'){
     if(isHost&&reveal){
@@ -171,7 +171,7 @@ function App(){
       const left=Math.ceil(remainingMs(reveal.endsAt,now)/1000);
       return <Page {...pageProps}><section className="reveal">{timerLive?<div className="timer">{left}</div>:<p className="timer-off">Timer off. Hide the list when you're done.</p>}<p>Only you can see this list</p><div className="word-grid">{reveal.words.map(w=><span key={w}>{w}</span>)}</div><button className="ghost" onClick={endReveal}>Hide now</button></section></Page>;
     }
-    if(isHost)return <Page {...pageProps}><div className="loader">Preparing the listâ¦</div><ErrorText text={error}/></Page>;
+    if(isHost)return <Page {...pageProps}><div className="loader">Preparing the list…</div><ErrorText text={error}/></Page>;
     return <Page {...pageProps}><section className="reveal"><p className="eyebrow">Room {code}</p><h2>The host has the list.</h2><p className="reveal-note">Only the host can see it. Sit tight.</p></section></Page>;
   }
 
@@ -191,13 +191,13 @@ function App(){
     <div className="lobby-grid">
       <div>
         <h3>Players <b>{players.length}</b></h3>
-        {players.map(p=><div className="player" key={p.id}><i>{p.name[0]}</i><span>{p.name}{p.id===room.hostId&&<small> Host</small>}</span><em className={p.submitted?'ready':''}>{p.submitted?'Ready':'Choosingâ¦'}</em>{isHost&&p.id!==room.hostId&&<button className="remove" onClick={()=>kick(p.id)}>Remove</button>}</div>)}
+        {players.map(p=><div className="player" key={p.id}><i>{p.name[0]}</i><span>{p.name}{p.id===room.hostId&&<small> Host</small>}</span><em className={p.submitted?'ready':''}>{p.submitted?'Ready':'Choosing…'}</em>{isHost&&p.id!==room.hostId&&<button className="remove" onClick={()=>kick(p.id)}>Remove</button>}</div>)}
       </div>
       <div className="secret">
         <div className="theme secret-theme"><b>Theme</b>{isHost?<div className="theme-edit"><input aria-label="Room theme" value={themeDraft} onChange={e=>setThemeDraft(e.target.value)}/><button className="mini" disabled={!themeDraft.trim()||themeDraft===room.settings?.category} onClick={()=>changeTheme(themeDraft.trim())}>Save</button></div>:<span>{room.settings?.category}</span>}</div>
         <p>Choose your secret word</p>
         <small>Pick a word that fits the theme. Only the host will see who submitted it.</small>
-        {room.players?.[uid]?.submitted?<><div className="sealed">â Word submitted</div><small>Your word is private until the reveal.</small></>:<><input value={secret} onChange={e=>setSecret(e.target.value)} placeholder=""/><button onClick={submit}>Submit my word</button></>}
+        {room.players?.[uid]?.submitted?<><div className="sealed">✓ Word submitted</div><small>Your word is private until the reveal.</small></>:<><input value={secret} onChange={e=>setSecret(e.target.value)} placeholder=""/><button onClick={submit}>Submit my word</button></>}
       </div>
     </div>
     {isHost&&<div className="hostbar"><span>{readyCount}/{players.length} ready</span><button disabled={!everyoneReady} onClick={start}>Reveal the list</button></div>}
@@ -213,7 +213,7 @@ function Board({room,host,capture,code,submissions,onRevealAgain,timerOff,onTogg
   const[a,setA]=useState(alive[0]?.id||'');
   const[b,setB]=useState(alive[1]?.id||'');
   return <section className="board">
-    <p className="eyebrow">Room {code} Â· Game on</p>
+    <p className="eyebrow">Room {code} · Game on</p>
     <h2>{win?`${win.name} rules the empire.`:'Who remembers who?'}</h2>
     <p className="muted">Guess aloud. The host records a correct capture; the losing empire moves as one.</p>
     {host&&<details className="identity-key"><summary>Host identity key</summary>{Object.entries(submissions).map(([id,s])=><div key={id}><span>{s.word}</span><b>{players[id]?.name||'Player left'}</b></div>)}</details>}
@@ -234,7 +234,7 @@ function Page({children,help,helpOpen,closeHelp}:{children:React.ReactNode;help:
     <header><a href="/empire/">EMPIRE</a><button className="help-button" onClick={help}>Help</button></header>
     {children}
     {helpOpen&&<div className="help-backdrop" role="dialog" aria-modal="true" aria-label="How to play"><section className="help-panel">
-      <button className="help-close" onClick={closeHelp} aria-label="Close help">Ã</button>
+      <button className="help-close" onClick={closeHelp} aria-label="Close help">×</button>
       <p className="eyebrow">How to play</p>
       <h2>Build your empire.</h2>
       <ol>
@@ -249,7 +249,7 @@ function Page({children,help,helpOpen,closeHelp}:{children:React.ReactNode;help:
     </section></div>}
   </main>;
 }
-function Card({title,children,back}:{title:string;children:React.ReactNode;back:()=>void}){return <section className="card"><button className="back" onClick={back}>â Back</button><h2>{title}</h2>{children}</section>}
+function Card({title,children,back}:{title:string;children:React.ReactNode;back:()=>void}){return <section className="card"><button className="back" onClick={back}>← Back</button><h2>{title}</h2>{children}</section>}
 function Field({label,value,set,placeholder}:{label:string;value:string;set:(v:string)=>void;placeholder?:string}){return <label>{label}<input value={value} onChange={e=>set(e.target.value)} placeholder={placeholder}/></label>}
 function ErrorText({text}:{text:string}){return text?<p className="error">{text}</p>:null}
 
