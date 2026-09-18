@@ -4,3 +4,4 @@
 .reveal-again{margin-top:14px}
 .player .remove{background:transparent;color:#a12e20;border:1px solid #d8c3bb;padding:4px 10px;font-size:11px;border-radius:999px}
 .hint{margin:10px 0 0;font-size:13px;color:#83776d}
+.card label.timer-row{display:flex;justify-content:space-between;align-items:center}.toggle{width:auto;padding:8px 22px;font-size:13px;background:#a99b8e}.toggle.on{background:#28794b}.timer-off{color:#e5aa74;font-size:16px;margin:0 0 6px}.board-timer{display:block;margin-top:12px;background:transparent;color:#655c55;border:1px solid currentColor;padding:8px 14px;font-size:12px;border-radius:999px}
